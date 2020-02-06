@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Browse the Files</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container-fluid">
+
+<div class="row nav nav-bar shadow-sm p-1 mb-5 bg-white rounded">
+    <div class="col ">
+        <h1>Browse</h1>
+        </div>
+
+        <a class="nav-item nav-link" href="{% url 'signup' %}">Sign Up</a>
+        {% if user.is_authenticated %}
+
+        <form id="logout" method="post" action ="{% url 'logout' %}">
+            {% csrf_token %}
+        </form>
+        <a class="nav-item nav-link" href="javascript:{document.getElementById('logout').submit()}">Logout</a>
+        {% else %}
+        <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+        {% endif %}
+</div>
+    {% if parent is 0 %}
+    <div class="row">
+
+
+        <h3>Files</h3>
+    </div>
+    <div class="row hidden-md-up">
+        {% if User is not None %}
+
+        <h1> {{User.username}}</h1>
+        {% endif %}
+        {% for x in files %}
+
+        <div class="col-sm-4 col-md-2 col-6">
+            <a href="item/?id={{x.id}}">
+          <div class="card">
+              <div class="view overlay">
+
+        <img class=" img-thumbnail" height="100"   src="/media/thumbs/{{ x.file.url|slice:'-3:'|add:'.png' }}" alt="Card image cap">
+
+              </div>
+                  <div class="card-body">
+             <h6 class="card-title">{{x.filename}}</h6>
+             </div>
+        </div>
+            </a>
+        </div>
+
+        {% endfor %}
+{% endif %}
+     {% if parent is 1 %}
+        {% for x in files %}
+        <video width="800px" height="450px" controls style="float:left">
+            <source src="{{x.file.url}}" type="video/mp4">
+        </video>
+    <div style="float:left;padding-left:200px;">
+    <p>Filename :  {{ x.filename }}</p>
+    <form action={{x.file.url}}>
+    <p>Category : {{x.category}}</p>
+        <p>Genre : {{x.genre}}</p>
+        <p>Author : {{x.author}}</p>
+        <button class="btn btn-danger">download</button>
+        </form>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+</div>
+<style>
+</style>
+</body>
+</html>
